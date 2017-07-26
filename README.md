@@ -7,15 +7,27 @@
 >
 > 方式二：
 >
-> 安装nodeJs
+1. 安装nodeJs
 >
-> 进入项目所在的文件夹，执行npm init
+2. 进入项目所在的文件夹，执行npm init
 >
-> 安装gulp：$ npm install --save-dev gulp
+3. 安装gulp：$ npm install --save-dev gulp
 >
-> 项目路径下输入gulp，提示运行成功
+4. 项目路径下输入gulp，提示运行成功
 >
-> 游览器url栏中输入localhost:8000
+5. 游览器url栏中输入localhost:8000
 
-    
-    
+***
+### 规范模块 ###
+>  #####HTML规范#####
+    * 整体结构
+    * 代码格式
+    * 内容语义
+>  #####CSS规范#####
+    * 代码格式
+    * 命名规则
+    * 优化方案
+>  #####JS规范#####
+    * 代码格式
+    * 注意事项
+    * ajax模块
