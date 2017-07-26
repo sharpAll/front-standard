@@ -1,0 +1,175 @@
+<h2 class="u-ttb2">CSS规范 - 代码格式</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>选择器、属性和值都使用小写</dt>
+    <dd>
+        <p>在xhtml标准中规定了所有标签、属性和值都小写，CSS也是如此。</p>
+    </dd>
+    <dt>最后一个值也以分号结尾</dt>
+    <dd>
+        <p>通常在大括号结束前的值可以省略分号，但是这样做会对修改、添加和维护工作带来不必要的失误和麻烦。</p>
+    </dd>
+    <dt>省略值为0时的单位</dt>
+    <dd>
+        <p>为节省不必要的字节同时也使阅读方便，我们将0px、0em、0%等值缩写为0。</p>
+        <pre>
+                            <code class="css">
+.m-box{margin:0 10px;background-position:50% 0;}
+                            </code>
+                            </pre>
+    </dd>
+    <dt>使用单引号</dt>
+    <dd>
+        <p>省略url引用中的引号，其他需要引号的地方使用单引号。</p>
+        <pre>
+                            <code class="css">
+.m-box{background:url(bg.png);}
+.m-box:after{content:'.';}
+                            </code>
+                            </pre>
+    </dd>
+    <dt>使用16进制表示颜色值</dt>
+    <dd>
+        <p>除非你需要透明度而使用rgba，否则都使用#f0f0f0这样的表示方法，并尽量缩写。</p>
+        <pre>
+                            <code class="css">
+.m-box{color:#f00;background:rgba(0,0,0,0.5);}
+                            </code>
+                            </pre>    </dd>
+    <dt>根据属性的重要性按顺序书写</dt>
+    <dd>
+        <p>只遵循横向顺序即可，先显示定位布局类属性，后盒模型等自身属性，最后是文本类及修饰类属性。</p>
+        <table>
+            <thead>
+            <tr><th>→</th><th>显示属性</th><th>自身属性</th><th>文本属性和其他修饰</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>&nbsp;</td><td>display</td><td>width</td><td>font</td></tr>
+            <tr><td>&nbsp;</td><td>visibility</td><td>height</td><td>text-align</td></tr>
+            <tr><td>&nbsp;</td><td>position</td><td>margin</td><td>text-decoration</td></tr>
+            <tr><td>&nbsp;</td><td>float</td><td>padding</td><td>vertical-align</td></tr>
+            <tr><td>&nbsp;</td><td>clear</td><td>border</td><td>white-space</td></tr>
+            <tr><td>&nbsp;</td><td>list-style</td><td>overflow</td><td>color</td></tr>
+            <tr><td>&nbsp;</td><td>top</td><td>min-width</td><td>background </td></tr>
+            </tbody>
+        </table>
+        <pre>
+                            <code class="css">
+.m-box{
+    position:relative;
+    width:600px;
+    margin:0 auto 10px;
+    text-align:center;
+    color:#000;
+}
+                            </code>
+                            </pre>
+        <p>如果属性间存在关联性，则不要隔开写。</p>
+        <pre>
+                            <code class="css">
+/* 这里的height和line-height有关联性 */
+.m-box{position:relative;height:20px;line-height:20px;padding:5px;color:#000;}
+                            </code>
+                            </pre>
+    </dd>
+    <dt>私有在前，标准在后</dt>
+    <dd>
+        <p>先写带有浏览器私有标志的，后写W3C标准的。</p>
+        <pre>
+                            <code class="css">
+.m-box{
+    -webkit-box-shadow:0 0 0 #000;
+    -moz-box-shadow:0 0 0 #000;
+    box-shadow:0 0 0 #000;
+}
+                            </code>
+                            </pre>
+    </dd>
+    <dt>注释格式：/* 注释文字 */</dt>
+    <dd>
+        <p>对选择器的注释统一写在被注释对象的上一行，对属性及值的注释写于分号后。</p>
+        <p>注释内容两端需空格，已确保即使在编码错误的情况下也可以正确解析样式。</p>
+        <p>在必要的情况下，可以使用块状注释，块状注释保持统一的缩进对齐。</p>
+        <p>原则上每个系列的样式都需要有一个注释，言简意赅的表明名称、用途、注意事项等。</p>
+        <pre>
+                            <code class="css">
+/* 块状注释文字
+ * 块状注释文字
+ * 块状注释文字
+ */
+.m-list{width:500px;}
+.m-list li{height:20px;line-height:20px;/* 这里是对line-height的一个注释 */overflow:hidden;}
+.m-list li a{color:#333;}
+/* 单行注释文字 */
+.m-list li em{color:#666;}
+                            </code>
+                            </pre>
+    </dd>
+    <dt>原则上不允许使用Hack</dt>
+    <dd>
+        <p>很多不兼容问题可以通过改变方法和思路来解决，并非一定需要Hack，根据经验你完全可以绕过某些兼容问题。</p>
+        <p>一种合理的结构和合理的样式，是极少会碰到兼容问题的。</p>
+        <p>由于浏览器自身缺陷，我们无法避开的时候，可以允许使用适当的Hack。</p>
+    </dd>
+    <dt>统一Hack方法</dt>
+    <dd>
+        <p>统一使用“*”和“_”分别对IE7和6进行Hack。如下代码所示：</p>
+        <pre>
+                            <code class="css">
+/* IE7会显示灰色#888，IE6会显示白色#fff，其他浏览器显示黑色#000 */
+.m-list{color:#000;*color:#888;_color:#fff;}
+                            </code>
+                            </pre>
+    </dd>
+    <dt>选择器顺序</dt>
+    <dd>
+        <p>请综合考虑以下顺序依据：</p>
+        <ul>
+            <li>从大到小（以选择器的范围为准）</li>
+            <li>从低到高（以等级上的高低为准）</li>
+            <li>从先到后（以结构上的先后为准）</li>
+            <li>从父到子（以结构上的嵌套为准）</li>
+        </ul>
+        <p>以下仅为简单示范：</p>
+        <pre>
+                            <code class="css">
+/* 从大到小 */
+.m-list p{margin:0;padding:0;}
+.m-list p.part{margin:1px;padding:1px;}
+/* 从低到高 */
+.m-logo a{color:#f00;}
+.m-logo a:hover{color:#fff;}
+/* 从先到后 */
+.g-hd{height:60px;}
+.g-bd{height:60px;}
+.g-ft{height:60px;}
+/* 从父到子 */
+.m-list{width:300px;}
+.m-list .itm{float:left;}
+                            </code>
+                            </pre>
+    </dd>
+    <dt>选择器等级</dt>
+    <dd>
+        <p>a = 行内样式style。</p>
+        <p>b = ID选择器的数量。</p>
+        <p>c = 类、伪类和属性选择器的数量。</p>
+        <p>d = 类型选择器和伪元素选择器的数量。</p>
+        <table>
+            <tbody><tr><th>选择器</th><th>等级(a,b,c,d)</th></tr>
+            <tr><td>style=”” </td><td>1,0,0,0</td></tr>
+            <tr><td>#wrapper #content {}</td><td>0,2,0,0</td></tr>
+            <tr><td>#content .dateposted {}</td><td>0,1,1,0</td></tr>
+            <tr><td>div#content {}</td><td>0,1,0,1</td></tr>
+            <tr><td>#content p {}</td><td>0,1,0,1</td></tr>
+            <tr><td>#content {}</td><td>0,1,0,0</td></tr>
+            <tr><td>p.comment .dateposted {}</td><td>0,0,2,1</td></tr>
+            <tr><td>div.comment p {}</td><td>0,0,1,2</td></tr>
+            <tr><td>.comment p {}</td><td>0,0,1,1</td></tr>
+            <tr><td>p.comment {}</td><td>0,0,1,1</td></tr>
+            <tr><td>.comment {}</td><td>0,0,1,0</td></tr>
+            <tr><td>div p {}</td><td>0,0,0,2</td></tr>
+            <tr><td>p {}</td><td>0,0,0,1</td></tr>
+            </tbody></table>
+    </dd>
+</dl>

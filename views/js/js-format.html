@@ -1,0 +1,174 @@
+<h2 class="u-ttb2">JS规范 - 代码格式</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>javascript书写位置</dt>
+    <dd>
+        <ul>
+            <li>无论是引入外部js文件，还是插入js片段，都应将 &lt;script&gt;标签放到  &lt;body&gt;元素中，并且置于  &lt;body&gt;元素中的 html 代码的最下面</li>
+            <li>将 &lt;script&gt; 标签放到 &lt;head&gt; 标签中，需等待外部js 文件全部下载、解析并执行完之后才能解析 &lt;body&gt; 中的元素，这可能会导致加载页面时出现短暂的吃顿现象。</li>
+            <li>将 &lt;script&gt; 标签放到 &lt;head&gt; 标签中，当在js中立即调用dom元素时，可能因为dom元素尚未渲染而出错。</li>
+        </ul>
+    </dd>
+    <dt>函数名与变量名命名规范</dt>
+    <dd>
+        <ul>
+            <li>Javascript 中的一切函数与变量都区分大小写。</li>
+            <li>函数名和变量名（除常量外）统一采用小驼峰式命名法。</li>
+            <li>函数名前缀应为动词。eg:getName()</li>
+            <li>变量名前缀应为名词。eg:maxCount</li>
+            <li>常量使用大写字母和下划线来组合命名。eg:MAX_COUNT</li>
+        </ul>
+        <table>
+            <caption>常见动词约定</caption>
+            <thead>
+            <tr><th>动词</th><th>含义</th><th>返回值</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>can</td><td>判断是否可执行某个动作(权限)</td><td>函数返回一个布尔值。true：可执行；false：不可执行</td>
+            </tr>
+            <tr>
+                <td>has</td><td>判断是否含有某个值</td><td>函数返回一个布尔值。true：含有此值；false：不含有此值</td>
+            </tr>
+            <tr>
+                <td>is</td><td>判断是否为某个值</td><td>函数返回一个布尔值。true：为某个值；false：不为某个值</td>
+            </tr>
+            <tr>
+                <td>get</td><td>获取某个值</td><td>函数返回一个非布尔值</td>
+            </tr>
+            <tr>
+                <td>set</td><td>设置某个值</td><td>无返回值、返回是否设置成功或者返回链式对象</td>
+            </tr>
+            <tr>
+                <td>load</td><td>加载某些数据</td><td>无返回值或者返回是否加载完成的结果</td>
+            </tr>
+            </tbody>
+        </table>
+    </dd>
+    <dt>分号与代码块规范</dt>
+    <dd>
+        <p>每一句代码的结尾必须加上”;”，尽管在 javascript 中代码结束不加分号也不会报错。</p>
+        <p>避免错误，诸如不完整的输入。</p>
+        <p>可以通过删除多余的空格来压缩js 代码，代码结尾没有分号会导致压缩错误。</p>
+        <p>增进代码性能。解析器不必花时间推测应该从哪里插入分号来结束语句。</p>
+        <br/>
+        <p>if条件语句中，如果代码块中只有一条语句</p>
+        <pre>
+                            <code class="javascript">
+if (test)
+alert(test);
+                            </code>
+                            </pre>
+        <p>上述代码不会导致错误，但会使代码难以理解。推荐使用方法如下：</p>
+        <pre>
+                            <code class="javascript">
+if (test) {
+    alert(test);
+}
+                            </code>
+                            </pre>
+    </dd>
+    <dt>构造函数与类</dt>
+    <dd>
+        <ul>
+            <li>构造函数名采用大驼峰式命名法。前缀为名称。</li>
+            <li>类的成员包含公共属性和方法，私有属性和方法。</li>
+            <li>公共属性和方法跟变量和函数的命名一样</li>
+            <li>私有属性和方法前缀为_(下划线)，后面跟公共属性和方法一样的命名方式。</li>
+        </ul>
+        <pre>
+                            <code class="javascript">
+function Student(name) {
+    var _name = name; // 私有成员
+
+    // 公共方法
+    this.getName = function () {
+        return _name;
+    }
+
+    // 公共方式
+    this.setName = function (value) {
+        _name = value;
+    }
+}
+var st = new Student('tom');
+st.setName('jerry');
+console.log(st.getName()); // => jerry：输出_name私有变量的值
+                            </code>
+                            </pre>
+    </dd>
+
+    <dt>代码注释</dt>
+    <dd>
+        <p>单行注释</p>
+        <pre>
+                            <code class="javascript">
+// 单行注释
+                            </code>
+                            </pre>
+        <p>多行注释</p>
+        <pre>
+                            <code class="javascript">
+/*
+ * 这是一个多行注释
+ * 多行注释的第二行
+ */
+                            </code>
+                            </pre>
+        <p>方法注释（方法的注释一般应注明方法是干什么用的，注意事项是什么，参数含义，返回数据信息）</p>
+        <pre>
+                            <code class="javascript">
+/**
+ * 主要功能：生成随机数
+ * 注意事项：此方法只能生成11-15位的随机数
+ *
+ * param size{number} 生成随机数的长度，范围在数字11~14之间
+ * return {number} 随机数
+ */
+function getRandom (size) {
+    return Math.random().toString(16).substr(2, size);
+}
+                            </code>
+                            </pre>
+        <br/>
+        <table>
+            <caption>常用注释关键字</caption>
+            <thead>
+            <tr><th>注释名</th><th>语法</th><th>含义</th><th>示例</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>param</td>
+                <td>param 参数名 {参数类型} &nbsp;描述信息</td>
+                <td>描述参数的信息</td>
+                <td>param name {String} 传入名称</td>
+            </tr>
+            <tr>
+                <td>return</td>
+                <td>return {返回类型} 描述信息</td>
+                <td>描述返回值的信息</td>
+                <td>return {Boolean} true:可执行;false:不可执行</td>
+            </tr>
+            <tr>
+                <td>author</td>
+                <td>author 作者信息 [附属信息：如邮箱、日期]</td>
+                <td>描述此函数作者的信息</td>
+                <td>author xia 2017/07/25&nbsp;</td>
+            </tr>
+            <tr>
+                <td>version</td>
+                <td>version XX.XX.XX</td>
+                <td>描述此函数的版本号</td>
+                <td>version 1.0.3</td>
+            </tr>
+            <tr>
+                <td>example</td>
+                <td>example 示例代码</td>
+                <td>演示函数的使用</td>
+                <td>example setTitle('测试')</td>
+            </tr>
+            </tbody>
+        </table>
+    </dd>
+</dl>
+</div>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+    <meta charset="utf-8">
+    <title>整体结构 - HTML规范 - 规范 - NEC : 更好的CSS样式解决方案</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!--<link rel="icon" type="image/x-icon" href="favicon.ico">-->
+    <link media="all" href="css/index.css" type="text/css" rel="stylesheet">
+    <link href="tools/highlight/styles/arduino-light.css" rel="stylesheet">
+    <script src="tools/highlight/highlight.pack.js"></script>
+</head>
+<body class="p-article">
+<div class="g-nv f-usn">
+    <div class="g-in">
+        <ul class="m-nav" id="nav">
+            <li class="first crt"><a data-menu="html">HTML规范</a><i></i></li>
+            <li><a data-menu="css">CSS规范</a><i></i></li>
+            <li><a data-menu="js">JS规范</a><i></i></li>
+        </ul>
+    </div>
+</div>
+<div class="g-bd2">
+    <div class="g-in">
+        <div class="g-sd">
+            <div id="menu" class="m-menu f-usn">
+                <ul class="f-cb" id="html">
+                    <li class="crt">
+                        <a data-get="getHtmlStructure">整体结构</a>
+                    </li>
+                    <li>
+                        <a data-get="getHtmlFormat">代码格式</a>
+                    </li>
+                    <li>
+                        <a data-get="getHtmlContent">内容语义</a>
+                    </li>
+                </ul>
+                <ul class="f-cb" id="css" style="display: none">
+                    <li class="crt">
+                        <a data-get="getCssFormat">代码格式</a>
+                    </li>
+                    <li>
+                        <a data-get="getCssName">命名规则</a>
+                    </li>
+                    <li>
+                        <a data-get="getCssOptimize">优化方案</a>
+                    </li>
+                </ul>
+                <ul class="f-cb" id="js" style="display: none">
+                    <li class="crt">
+                        <a data-get="getJsFormat">代码格式</a>
+                    </li>
+                    <li>
+                        <a data-get="getJsAttention">注意事项</a>
+                    </li>
+                    <li>
+                        <a data-get="getJsAjax">ajax模块</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="g-mn">
+            <div class="g-mnc">
+                <div class="m-article" id="content">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="g-ft">
+    <div class="g-in">
+        <div class="m-ft">
+
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script src="js/controller/commonController.js"></script>
+<script>
+    $(document).ready(function () {
+        init();
+    });
+    function init() {
+        $("#menu").on('click','a',function () {
+            var $this=$(this);
+            $this.parent().parent().find('li').removeClass('crt');
+            $this.parent().addClass('crt');
+            var getUrl=$this.attr('data-get');
+            commonController[getUrl]({},function (data) {
+                $("#content").empty().html(data);
+                HXcommon.highlightInit();
+            });
+        });
+        $("#nav").on('click','a',function () {
+            var $this=$(this);
+            $this.parent().parent().find('li').removeClass('crt');
+            $this.parent().addClass('crt');
+            var menu=$this.attr('data-menu');
+            $("#menu").find('.f-cb').hide();
+            $("#"+menu).show();
+            $("#"+menu).find("li.crt a").trigger('click');
+        });
+        $("#menu").find("a").eq(0).trigger('click');
+    }
+</script>
+</html>

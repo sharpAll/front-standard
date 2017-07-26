@@ -1,0 +1,138 @@
+<h2 class="u-ttb2">JS规范 - 注意事项</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>将声明的变量写在函数顶部防止变量名提升带来的影响</dt>
+    <dd>
+        <p>javascript中函数内所有使用var声明的变量都会提升到函数体头部，这将可能产生一类错误，例如：</p>
+        <pre>
+                            <code class="javascript">
+myname = "global";
+function sample() {
+    alert(myname); // "undefined"
+    var myname = "local";
+    alert(myname); // "local"
+}
+sample();
+                            </code>
+                            </pre>
+        <p>第一个alert出来的并非global。原因在于，函数sample内部声明的myname会提升到函数体顶部，而原语句的地方才是正在赋值的地方。在声明和赋值直接引用的话肯定是undefined了。其执行效果如下：</p>
+        <pre>
+                            <code class="javascript">
+myname = "global";
+function sample() {
+    var myname;//没有赋值
+    alert(myname); // "undefined"
+    myname = "local";//此处赋值
+    alert(myname); // "local"
+}
+sample();
+                            </code>
+                            </pre>
+        <p>所以在函数体讲所有的var声明的东西都拿到函数体顶部，以免造成不必要的错误。</p>
+    </dd>
+    <dt>尽量减少遍历DOM节点产生的性能损耗</dt>
+    <dd>
+        <p>以下是一组循环（假设myarray是一组DOM元素）</p>
+        <pre>
+                            <code class="javascript">
+for (var i = 0; i < myarray.length; i++) {
+    //do something
+}
+                            </code>
+                            </pre>
+        <p>看似没有问题，但是如果myarray是读取的DOM的节点，那么每一次循环都要去DOM里选取节点再做判断，非常影响性能。在DOM节点数量大时尤其严重。优化如下：</p>
+        <pre>
+                            <code class="javascript">
+for (var i = 0, max = myarray.length; i < max; i++) {
+    //do something
+}
+                            </code>
+                            </pre>
+    </dd>
+
+    <dt>使用IIFE（立即执行的函数表达式）防止全局命名空间污染</dt>
+    <dd>
+        <p>在团队开发或者引入第三方JS文件时，有时会造成全局对象的名称冲突，比如a.js有个全局函数sendMsg()，b.js也又有个全局函数sendMsg()，引入a.js和b.js文件时，会造成sendMsg()函数冲突。</p>
+        <p>框架都有独一无二的全局对象名称（例如jQuery的全局对象jQuery），使用$做全局对象可能起冲突，使用jQuery就不可能起冲突。</p>
+        <p>使用IIFE创建一个新的封闭的定义域。它不仅避免了干扰，也使得内存在执行完后立即释放。</p>
+        <pre>
+                            <code class="javascript">
+(function($, w, d){
+$(function() {
+w.alert(d.querySelectorAll('div').length);
+});
+}(jQuery, window, document));
+                            </code>
+                            </pre>
+    </dd>
+
+    <dt>正确使用闭包</dt>
+    <dd>
+        <p>在循环语句中加入函数形成闭包是非常容易带来隐患的。例如：</p>
+        <pre>
+                            <code class="javascript">
+function f1() {
+    var result=new Array();
+    for(var i=0;i<10;i++){
+        result[i]=function () {
+            return i;
+        };
+    }
+   return result;
+}
+var array=f1();
+console.log(array[5]());//10
+                            </code>
+                            </pre>
+        <p>这里如果期望每次返回相应的索引值就出问题了，因为实际上每个函数返回的都是10。</p>
+        <p>调用array[n]时闭包引用的是同一个变量对象，而变量对象中的i保存的是最后一次生成的值10。改变方法如下：</p>
+        <pre>
+                            <code class="javascript">
+function f1() {
+    var result=new Array();
+    for(var i=0;i<10;i++){
+        result[i]=function (num) {
+            return function () {
+                return num;
+            };
+        }(i);
+    }
+   return result;
+}
+var array=f1();
+console.log(array[5]());//5
+                            </code>
+                            </pre>
+        <p>在每个闭包外层再添加一层变量对象。</p>
+        <br/>
+        <p>以下是一个典型的在开发中碰到的有关闭包的bug：</p>
+        <pre>
+                            <code class="javascript">
+   $(document).ready(function() {
+        for (var i = 1; i < 4; i++) {
+            $('&lt;li&gt;Print ' + i + '&lt;/li&gt;')
+                .click(function() {
+                    alert(i);
+                }).appendTo('ul');
+        }
+    });
+                            </code>
+                            </pre>
+        <p>这里点击每个li时弹出的都是4，原因跟之前例子一样，调用外层变量对象的i就是最后生成的那个值。解决如下：</p>
+        <pre>
+                            <code class="javascript">
+   $(document).ready(function() {
+        for (var i = 1; i < 4; i++) {
+            (function (num) {
+                $('&lt;li&gt;Print ' + num + '&lt;/li&gt;')
+                    .click(function() {
+                        alert(num);
+                    }).appendTo('ul');
+            })(i)
+        }
+    });
+                            </code>
+                            </pre>
+    </dd>
+</dl>
+</div>

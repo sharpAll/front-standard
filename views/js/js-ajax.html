@@ -1,0 +1,125 @@
+<h2 class="u-ttb2">JS规范 - ajax管理</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>为何对ajax进行管理</dt>
+    <dd>
+        <p>当项目大、接口多时，零散的ajax调用会使工程看上去凌乱，代码重复率高。</p>
+        <p>零散的ajax调用难以形成统一的文档，不利于项目开发和维护。</p>
+    </dd>
+    <dt>在顶层js中封装ajax基本方法。</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+    // ajax组件
+    ajaxDataController:function () {
+        //打印ajax错误日志
+        function printLog(result, url, params, response) {
+            console.error('AJAX 请求异常 - %s\n错误信息：\n%c%s\n%c'+
+                                '请求链接：%s\n%c请求参数：%c%s\n%c返回数据：%c%s',
+                'color:red;',
+                result,
+                'color:#333;',
+                'color:blue',
+                url,
+                'color:#333;',
+                'color:green',
+                JSON.stringify(params),
+                'color:#333;',
+                'color:#643A3A',
+                response)
+        }
+        /*
+        params url{string}接口地址 params{object}参数 callback{function}请求成功后执行回调函数
+        async{boolean}是否异步 method{string}请求方式
+        */
+        function dataHandle(url, params, callback,async,method) {
+            if ((typeof params) === 'function') {
+                callback = params;
+                params = null;
+            }
+            params = params || {};
+            async = async == null ? true : async;
+            $.ajax({
+                async: async,
+                url: url,
+                data: params,
+                type: method,
+                success: function (result, textStatus, xhr) {
+                    switch (result.status) {
+                        case 404:
+                            // do something
+                            break;
+                        case 500:
+                            // do something
+                            break;
+                        default:
+                            callback(result);
+                            break;
+                    }
+                },
+                error: function (xhr, textStatus, error) {
+                    alert("系统出现异常，请稍候再试");
+                    printLog(xhr.status, textStatus + ' - ' + error, url, params, xhr.responseText);
+                }
+            });
+        }
+                            </code>
+                            </pre>
+        <p>该方法将根据异常码对不同的异常做统一的处理</p>
+    </dd>
+
+    <dt>根据模块划分创建接口的集合</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+//公共接口模块
+var commonController = {
+    _ajaxHander: HXcommon.ajaxDataController(),
+    _url: {
+        /*
+         html规范-HTML整体结构
+         get
+         params:{}
+         author:xia
+         */
+        GET_HTMLSTRUCTURE: 'views/html/html-structure.html',
+        /*
+         html规范-HTML代码格式
+         get
+         params:{}
+         author:xia
+         */
+        GET_HTMLFORMAT:'views/html/html-format.html'
+    },
+    getHtmlStructure : function(params,callback) {
+        this._ajaxHander.get(this._url.GET_HTMLSTRUCTURE,function(data) {
+            callback(data);
+        });
+    },
+    getHtmlFormat: function(params,callback) {
+        this._ajaxHander.get(this._url.GET_HTMLFORMAT,function(data) {
+            callback(data);
+        });
+    }
+};
+                            </code>
+                            </pre>
+        <p>接口地址变量采用大写，组合为'请求方式'+'_'+'方法名'。</p>
+        <p>每个接口都应该具备完整的注释，包括接口描述，请求方式，参数及参数类型，创建者。</p>
+        <p>调用方法采用小驼峰式命名。</p>
+    </dd>
+
+    <dt>调用接口</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+ //获取html整体结构
+ commonController.getHtmlStructure(function (data) {
+                $("#content").empty().html(data);
+                HXcommon.highlightInit();
+ });
+                            </code>
+                            </pre>
+    </dd>
+</dl>
+</div>
