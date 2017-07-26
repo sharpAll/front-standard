@@ -7,7 +7,7 @@
  方式二：
 1. 安装nodeJs
 2. 进入项目所在的文件夹，执行npm init
-3. 安装gulp：$ npm install --save-dev gulp
+3. 安装gulp：npm install --save-dev gulp
 4. 项目路径下输入gulp，提示运行成功
 5. 游览器url栏中输入localhost:8000
 
